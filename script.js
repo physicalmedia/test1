@@ -1,663 +1,895 @@
+
 /*=========================================================
-22. RESPONSIVE DESIGN
+8. ANIMATED NUMBER COUNTERS
 =========================================================*/
 
-@media screen and (max-width: 1400px) {
+const counterElements = document.querySelectorAll(".stat h2");
 
-    .hero h1 {
+counterElements.forEach((counter) => {
 
-        font-size: clamp(4rem, 9vw, 8rem);
+    const value = counter.innerText;
 
-    }
+    const number = parseInt(value.replace(/\D/g, ""));
 
-    .project-grid {
+    if (isNaN(number)) return;
 
-        grid-template-columns: repeat(2, 1fr);
+    gsap.fromTo(
 
-    }
+        counter,
 
-    .stats-grid {
+        {
 
-        grid-template-columns: repeat(2, 1fr);
+            innerText: 0
 
-    }
+        },
 
-}
+        {
 
+            innerText: number,
 
+            duration: 2,
 
+            ease: "power2.out",
 
+            snap: {
 
+                innerText: 1
 
+            },
 
-@media screen and (max-width: 1100px) {
+            scrollTrigger: {
 
-    .navbar {
+                trigger: counter,
 
-        flex-direction: column;
+                start: "top 90%"
 
-        gap: 2rem;
+            },
 
-    }
+            onUpdate: function () {
 
-    .about-grid {
+                counter.innerText =
 
-        grid-template-columns: 1fr;
+                    Math.floor(counter.innerText) +
 
-    }
+                    value.replace(/[0-9]/g, "");
 
-    .about-right {
+            }
 
-        grid-template-columns: repeat(2,1fr);
+        }
 
-    }
+    );
 
-    .timeline-item {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .service {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .testimonial-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .tech-grid {
-
-        grid-template-columns: repeat(2,1fr);
-
-    }
-
-    .footer-top {
-
-        grid-template-columns: 1fr;
-
-    }
-
-}
-
-
-
-
-
-
-
-@media screen and (max-width: 768px) {
-
-    html {
-
-        font-size: 15px;
-
-    }
-
-    header {
-
-        padding: 1rem 0;
-
-    }
-
-    .navbar {
-
-        gap: 1.5rem;
-
-    }
-
-    .nav-middle ul {
-
-        flex-wrap: wrap;
-
-        justify-content: center;
-
-        gap: 1rem;
-
-    }
-
-    .hero {
-
-        padding-top: 180px;
-
-        min-height: auto;
-
-        padding-bottom: 120px;
-
-    }
-
-    .hero h1 {
-
-        font-size: clamp(3rem,15vw,5rem);
-
-    }
-
-    .hero-description {
-
-        font-size: 1rem;
-
-    }
-
-    .hero-buttons {
-
-        flex-direction: column;
-
-    }
-
-    .hero-buttons a {
-
-        width: 100%;
-
-        justify-content: center;
-
-    }
-
-    .hero-stats {
-
-        gap: 2rem;
-
-    }
-
-    .stats-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .project-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .tech-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .about-right {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .contact-wrapper {
-
-        padding: 4rem 2rem;
-
-    }
-
-}
-
-
-
-
-
-
-
-@media screen and (max-width: 500px) {
-
-    h2 {
-
-        line-height: 1.1;
-
-    }
-
-    .service {
-
-        padding: 2rem;
-
-    }
-
-    .timeline-item {
-
-        padding: 2rem;
-
-    }
-
-    .stat-card {
-
-        padding: 2rem;
-
-    }
-
-    .feature-card {
-
-        padding: 2rem;
-
-    }
-
-    .project-content {
-
-        padding: 2rem;
-
-    }
-
-}
-
-
+});
 
 
 
 
 
 /*=========================================================
-23. GLOBAL HOVER ANIMATIONS
+9. PROJECT CARD 3D TILT
 =========================================================*/
 
-a {
+const projectCards = document.querySelectorAll(".project-card");
 
-    transition: var(--transition);
+projectCards.forEach((card) => {
 
-}
+    card.addEventListener("mousemove", (event) => {
 
-button {
+        const rect = card.getBoundingClientRect();
 
-    transition: var(--transition);
+        const x = event.clientX - rect.left;
 
-}
+        const y = event.clientY - rect.top;
 
-img {
+        const rotateY = (x / rect.width - 0.5) * 18;
 
-    transition: var(--transition);
+        const rotateX = (0.5 - y / rect.height) * 18;
 
-}
+        gsap.to(card, {
 
-.project-card:hover img {
+            rotationX: rotateX,
 
-    transform: scale(1.08);
+            rotationY: rotateY,
 
-}
+            transformPerspective: 1200,
 
-.feature-card:hover h3 {
+            transformOrigin: "center",
 
-    color: var(--accent);
+            duration: .4,
 
-}
+            ease: "power2.out"
 
-.service:hover .service-number {
+        });
 
-    color: var(--accent);
+    });
 
-    transform: translateX(12px);
+    card.addEventListener("mouseleave", () => {
 
-}
+        gsap.to(card, {
 
-.timeline-item:hover span {
+            rotationX: 0,
 
-    transform: scale(1.15);
+            rotationY: 0,
 
-}
+            duration: .7,
 
-.tech-card:hover {
+            ease: "power3.out"
 
-    letter-spacing: 2px;
+        });
 
-}
+    });
 
-
+});
 
 
 
 
 
 /*=========================================================
-24. SCROLL REVEAL CLASSES
+10. FAQ ACCORDION
 =========================================================*/
 
-.reveal {
+const faqItems = document.querySelectorAll(".faq-item");
 
-    opacity: 0;
+faqItems.forEach((item) => {
 
-    transform: translateY(80px);
+    const paragraph = item.querySelector("p");
 
-}
+    paragraph.style.height = "0px";
 
-.reveal-left {
+    paragraph.style.overflow = "hidden";
 
-    opacity: 0;
+    paragraph.style.opacity = "0";
 
-    transform: translateX(-80px);
+    item.addEventListener("click", () => {
 
-}
+        const active = item.classList.contains("active");
 
-.reveal-right {
+        faqItems.forEach((faq) => {
 
-    opacity: 0;
+            faq.classList.remove("active");
 
-    transform: translateX(80px);
+            const p = faq.querySelector("p");
 
-}
+            gsap.to(p, {
 
-.reveal-scale {
+                height: 0,
 
-    opacity: 0;
+                opacity: 0,
 
-    transform: scale(.85);
+                duration: .4
 
-}
+            });
 
-.visible {
+        });
 
-    opacity: 1;
+        if (!active) {
 
-    transform: none;
+            item.classList.add("active");
 
-}
+            gsap.to(paragraph, {
 
+                height: "auto",
 
+                opacity: 1,
+
+                duration: .5
+
+            });
+
+        }
+
+    });
+
+});
 
 
 
 
 
 /*=========================================================
-25. FLOATING ANIMATIONS
+11. SCROLL PROGRESS BAR
 =========================================================*/
 
-@keyframes float {
+const progressBar = document.createElement("div");
 
-    0% {
+progressBar.style.position = "fixed";
 
-        transform: translateY(0px);
+progressBar.style.left = "0";
 
-    }
+progressBar.style.top = "0";
 
-    50% {
+progressBar.style.height = "4px";
 
-        transform: translateY(-20px);
+progressBar.style.width = "0%";
 
-    }
+progressBar.style.background = "#ff6a00";
 
-    100% {
+progressBar.style.zIndex = "999999";
 
-        transform: translateY(0px);
+progressBar.style.transition = "width .15s linear";
 
-    }
+document.body.appendChild(progressBar);
 
-}
+window.addEventListener("scroll", () => {
 
-@keyframes pulse {
+    const scroll = window.scrollY;
 
-    0% {
+    const height =
 
-        transform: scale(1);
+        document.documentElement.scrollHeight -
 
-    }
+        window.innerHeight;
 
-    50% {
+    const width = (scroll / height) * 100;
 
-        transform: scale(1.05);
+    progressBar.style.width = width + "%";
 
-    }
-
-    100% {
-
-        transform: scale(1);
-
-    }
-
-}
-
-@keyframes rotateSlow {
-
-    from {
-
-        transform: rotate(0deg);
-
-    }
-
-    to {
-
-        transform: rotate(360deg);
-
-    }
-
-}
-
-@keyframes fadeUp {
-
-    from {
-
-        opacity: 0;
-
-        transform: translateY(80px);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform: translateY(0);
-
-    }
-
-}
-
-@keyframes fadeDown {
-
-    from {
-
-        opacity: 0;
-
-        transform: translateY(-80px);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform: translateY(0);
-
-    }
-
-}
-
-@keyframes fadeLeft {
-
-    from {
-
-        opacity: 0;
-
-        transform: translateX(-80px);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform: translateX(0);
-
-    }
-
-}
-
-@keyframes fadeRight {
-
-    from {
-
-        opacity: 0;
-
-        transform: translateX(80px);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform: translateX(0);
-
-    }
-
-}
-
-
+});
 
 
 
 
 
 /*=========================================================
-26. GLASS UTILITIES
+12. PARALLAX HERO
 =========================================================*/
 
-.glass {
+gsap.to(".circle1", {
 
-    background: rgba(255,255,255,.05);
+    y: 250,
 
-    backdrop-filter: blur(30px);
+    scrollTrigger: {
 
-    border: 1px solid rgba(255,255,255,.08);
+        trigger: ".hero",
 
-}
+        scrub: true
 
-.blur {
+    }
 
-    backdrop-filter: blur(80px);
+});
 
-}
+gsap.to(".circle2", {
 
-.shadow {
+    y: -200,
 
-    box-shadow: var(--shadow-large);
+    scrollTrigger: {
 
-}
+        trigger: ".hero",
 
-.round {
+        scrub: true
 
-    border-radius: var(--radius);
+    }
 
-}
+});
 
+gsap.to(".circle3", {
 
+    x: 180,
+
+    scrollTrigger: {
+
+        trigger: ".hero",
+
+        scrub: true
+
+    }
+
+});
+
+gsap.to(".grid", {
+
+    y: 120,
+
+    ease: "none",
+
+    scrollTrigger: {
+
+        trigger: ".hero",
+
+        scrub: true
+
+    }
+
+});
 
 
 
 
 
 /*=========================================================
-27. ANIMATION HELPERS
+13. SECTION TITLE REVEALS
 =========================================================*/
 
-.float {
+gsap.utils.toArray("section h2").forEach((title) => {
 
-    animation: float 6s ease-in-out infinite;
+    gsap.from(title, {
 
-}
+        scrollTrigger: {
 
-.pulse {
+            trigger: title,
 
-    animation: pulse 2.5s infinite;
+            start: "top 85%"
 
-}
+        },
 
-.rotate {
+        opacity: 0,
 
-    animation: rotateSlow 25s linear infinite;
+        y: 100,
 
-}
+        duration: 1,
 
-.fade-up {
+        ease: "power4.out"
 
-    animation: fadeUp 1s forwards;
+    });
 
-}
+});
 
-.fade-down {
+gsap.utils.toArray(".section-label").forEach((label) => {
 
-    animation: fadeDown 1s forwards;
+    gsap.from(label, {
 
-}
+        scrollTrigger: {
 
-.fade-left {
+            trigger: label,
 
-    animation: fadeLeft 1s forwards;
+            start: "top 90%"
 
-}
+        },
 
-.fade-right {
+        opacity: 0,
 
-    animation: fadeRight 1s forwards;
+        x: -60,
 
-}
+        duration: .8
 
+    });
 
+});
 
 
 
 
 
 /*=========================================================
-28. PERFORMANCE
+14. FLOATING BACKGROUND ORBS
 =========================================================*/
 
-.project-card,
+gsap.to(".circle1", {
 
-.feature-card,
+    x: 50,
 
-.tech-card,
+    y: -30,
 
-.service,
+    duration: 12,
 
-.timeline-item,
+    repeat: -1,
 
-.stat-card,
+    yoyo: true,
 
-.primary-button,
+    ease: "sine.inOut"
 
-.secondary-button {
+});
 
-    will-change: transform;
+gsap.to(".circle2", {
 
-}
+    x: -70,
 
-img {
+    y: 40,
 
-    image-rendering: auto;
+    duration: 10,
 
-}
+    repeat: -1,
 
-* {
+    yoyo: true,
 
-    -webkit-font-smoothing: antialiased;
+    ease: "sine.inOut"
 
-    -moz-osx-font-smoothing: grayscale;
+});
 
-}
+gsap.to(".circle3", {
 
+    x: 35,
 
+    y: -35,
+
+    duration: 8,
+
+    repeat: -1,
+
+    yoyo: true,
+
+    ease: "sine.inOut"
+
+});
 
 
 
 
 
 /*=========================================================
-29. END OF FILE
+15. IMAGE FADE-IN
 =========================================================*/
 
-/*
+gsap.utils.toArray(".project-image").forEach((image) => {
 
-Fenland Web Design
+    gsap.from(image, {
 
-Production Stylesheet
+        scrollTrigger: {
 
-Built for:
+            trigger: image,
 
-✔ HTML5
-✔ CSS3
-✔ GSAP
-✔ Lenis
-✔ ScrollTrigger
+            start: "top 85%"
 
-End of style.css
+        },
 
-*/
+        scale: .85,
+
+        opacity: 0,
+
+        duration: 1,
+
+        ease: "power3.out"
+
+    });
+
+});
+/*=========================================================
+16. NAVIGATION ACTIVE LINK
+=========================================================*/
+
+const sections = document.querySelectorAll("section");
+
+const navLinks = document.querySelectorAll(".nav-middle a");
+
+window.addEventListener("scroll", () => {
+
+    let current = "";
+
+    sections.forEach((section) => {
+
+        const sectionTop = section.offsetTop - 200;
+
+        const sectionHeight = section.offsetHeight;
+
+        if (window.scrollY >= sectionTop) {
+
+            current = section.getAttribute("id");
+
+        }
+
+    });
+
+    navLinks.forEach((link) => {
+
+        link.classList.remove("active");
+
+        if (link.getAttribute("href") === "#" + current) {
+
+            link.classList.add("active");
+
+        }
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+17. HERO PARALLAX TEXT
+=========================================================*/
+
+gsap.to(".hero h1", {
+
+    yPercent: 30,
+
+    ease: "none",
+
+    scrollTrigger: {
+
+        trigger: ".hero",
+
+        start: "top top",
+
+        end: "bottom top",
+
+        scrub: true
+
+    }
+
+});
+
+gsap.to(".hero-description", {
+
+    yPercent: 50,
+
+    ease: "none",
+
+    scrollTrigger: {
+
+        trigger: ".hero",
+
+        start: "top top",
+
+        end: "bottom top",
+
+        scrub: true
+
+    }
+
+});
+
+gsap.to(".hero-buttons", {
+
+    yPercent: 70,
+
+    ease: "none",
+
+    scrollTrigger: {
+
+        trigger: ".hero",
+
+        start: "top top",
+
+        end: "bottom top",
+
+        scrub: true
+
+    }
+
+});
+
+
+
+
+
+/*=========================================================
+18. FEATURE CARD HOVER GLOW
+=========================================================*/
+
+const featureCards = document.querySelectorAll(".feature-card");
+
+featureCards.forEach((card) => {
+
+    card.addEventListener("mousemove", (event) => {
+
+        const rect = card.getBoundingClientRect();
+
+        const x = event.clientX - rect.left;
+
+        const y = event.clientY - rect.top;
+
+        card.style.background = `radial-gradient(circle at ${x}px ${y}px,
+        rgba(255,106,0,.18),
+        rgba(255,255,255,.03) 45%)`;
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+
+        card.style.background = "rgba(255,255,255,.03)";
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+19. BUTTON RIPPLE EFFECT
+=========================================================*/
+
+const rippleButtons = document.querySelectorAll(
+
+    ".primary-button, .secondary-button"
+
+);
+
+rippleButtons.forEach((button) => {
+
+    button.addEventListener("click", (event) => {
+
+        const ripple = document.createElement("span");
+
+        const rect = button.getBoundingClientRect();
+
+        const size = Math.max(rect.width, rect.height);
+
+        ripple.style.width = size + "px";
+
+        ripple.style.height = size + "px";
+
+        ripple.style.position = "absolute";
+
+        ripple.style.borderRadius = "50%";
+
+        ripple.style.left =
+
+            event.clientX - rect.left - size / 2 + "px";
+
+        ripple.style.top =
+
+            event.clientY - rect.top - size / 2 + "px";
+
+        ripple.style.background = "rgba(255,255,255,.35)";
+
+        ripple.style.pointerEvents = "none";
+
+        ripple.style.transform = "scale(0)";
+
+        ripple.style.transition = ".6s";
+
+        button.style.position = "relative";
+
+        button.style.overflow = "hidden";
+
+        button.appendChild(ripple);
+
+        requestAnimationFrame(() => {
+
+            ripple.style.transform = "scale(4)";
+
+            ripple.style.opacity = "0";
+
+        });
+
+        setTimeout(() => {
+
+            ripple.remove();
+
+        }, 650);
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+20. RANDOM FLOATING ANIMATION
+=========================================================*/
+
+const floatingElements = document.querySelectorAll(
+
+    ".feature-card, .project-card, .tech-card"
+
+);
+
+floatingElements.forEach((element) => {
+
+    gsap.to(element, {
+
+        y: gsap.utils.random(-10, 10),
+
+        duration: gsap.utils.random(3, 6),
+
+        repeat: -1,
+
+        yoyo: true,
+
+        ease: "sine.inOut"
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+21. PROJECT IMAGE ZOOM
+=========================================================*/
+
+projectCards.forEach((card) => {
+
+    const image = card.querySelector(".project-image");
+
+    card.addEventListener("mouseenter", () => {
+
+        gsap.to(image, {
+
+            scale: 1.08,
+
+            duration: .5
+
+        });
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+
+        gsap.to(image, {
+
+            scale: 1,
+
+            duration: .5
+
+        });
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+22. TECHNOLOGY CARDS
+=========================================================*/
+
+const techCards = document.querySelectorAll(".tech-card");
+
+techCards.forEach((card) => {
+
+    card.addEventListener("mouseenter", () => {
+
+        gsap.to(card, {
+
+            scale: 1.08,
+
+            rotation: gsap.utils.random(-2, 2),
+
+            duration: .35
+
+        });
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+
+        gsap.to(card, {
+
+            scale: 1,
+
+            rotation: 0,
+
+            duration: .35
+
+        });
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+23. PAGE LOAD FADE
+=========================================================*/
+
+window.addEventListener("load", () => {
+
+    gsap.from("body", {
+
+        opacity: 0,
+
+        duration: .8,
+
+        ease: "power2.out"
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+24. SCROLL TO TOP BUTTON
+=========================================================*/
+
+const scrollButton = document.createElement("button");
+
+scrollButton.innerHTML = "↑";
+
+scrollButton.classList.add("scroll-top");
+
+document.body.appendChild(scrollButton);
+
+Object.assign(scrollButton.style, {
+
+    position: "fixed",
+
+    bottom: "30px",
+
+    right: "30px",
+
+    width: "55px",
+
+    height: "55px",
+
+    borderRadius: "50%",
+
+    border: "none",
+
+    background: "#ff6a00",
+
+    color: "#fff",
+
+    fontSize: "1.4rem",
+
+    cursor: "pointer",
+
+    opacity: "0",
+
+    transform: "translateY(30px)",
+
+    transition: ".35s",
+
+    zIndex: "99999"
+
+});
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 700) {
+
+        scrollButton.style.opacity = "1";
+
+        scrollButton.style.transform = "translateY(0)";
+
+    } else {
+
+        scrollButton.style.opacity = "0";
+
+        scrollButton.style.transform = "translateY(30px)";
+
+    }
+
+});
+
+scrollButton.addEventListener("click", () => {
+
+    lenis.scrollTo(0, {
+
+        duration: 1.5
+
+    });
+
+});
+
+
+
+
+
+/*=========================================================
+25. CONSOLE MESSAGE
+=========================================================*/
+
+console.log(
+
+`
+
+███████╗███████╗███╗   ██╗██╗      █████╗ ███╗   ██╗██████╗
+
+██╔════╝██╔════╝████╗  ██║██║     ██╔══██╗████╗  ██║██╔══██╗
+
+█████╗  █████╗  ██╔██╗ ██║██║     ███████║██╔██╗ ██║██║  ██║
+
+██╔══╝  ██╔══╝  ██║╚██╗██║██║     ██╔══██║██║╚██╗██║██║  ██║
+
+██║     ███████╗██║ ╚████║███████╗██║  ██║██║ ╚████║██████╔╝
+
+╚═╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝
+
+`
+
+);
+
+console.log("Fenland Web Design");
+
+console.log("Designed & Developed with HTML, CSS, JavaScript and GSAP.");
+
+console.log("© 2026");
